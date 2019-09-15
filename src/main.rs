@@ -34,7 +34,7 @@ fn tokenize(code: &String) -> Vec<Token> {
 
             // Numbers adhere to the following regex: ([0-9]|\.)+
             '0'..='9' => Some(TokenType::Number),
-            '.' => if let Some(TokenType::Identifier) = last_kind { Some(TokenType::Identifier) } else { None },
+            '.' => if let Some(TokenType::Number) = last_kind { Some(TokenType::Number) } else { None },
 
             // Catchall trait
             _ => None
