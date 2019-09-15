@@ -20,13 +20,18 @@ fn tokenize(code: &String) -> Vec<Token> {
     let mut tokens: Vec<Token> = vec![];
     let mut last_token_start: Option<usize> = None;
     let mut last_kind: Option<TokenType> = None;
+    let mut ln: usize = 0;
 
     for (i, c) in code.chars().enumerate() {
         let kind = match c {
             ',' => Some(TokenType::Comma),
             '\t' | '\r' | ' ' => Some(TokenType::Whitespace),
             '\0' => Some(TokenType::EOF),
-            '\n' => Some(TokenType::Newline),
+
+            '\n' => {
+                ln = ln + 1; // Increment the line number on newline
+                Some(TokenType::Newline)
+            },
 
             // Identifiers adhere to the following regex: ([a-z]|[A-Z]|\_)+
             'A'..='Z' | 'a'..='z' => Some(TokenType::Identifier),
@@ -43,14 +48,13 @@ fn tokenize(code: &String) -> Vec<Token> {
         if let Some(prev) = &last_kind {
             if let Some(curr) = &kind {
                 if prev != curr { // End of last token; Start of new token
-                    println!("Tokenchange; {:?}, {:?}, {}", prev, curr, i);
                     let token = match last_token_start {
                         Some(s) => {
                             Token {
                                 kind: last_kind,
                                 data: Some(String::from(&code[s .. i])),
                                 start: Some(s),
-                                position: Some((0, 0)) // TODO - Implement
+                                position: Some((ln, 0)) // TODO - Implement
                             }
                         },
                         None => {
