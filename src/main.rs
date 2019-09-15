@@ -74,7 +74,7 @@ fn tokenize(code: &String) -> Vec<Token> {
         last_kind = kind;
     }
 
-    tokens 
+    tokens
 }
 
 fn main() {
